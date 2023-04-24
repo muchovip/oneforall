@@ -297,9 +297,9 @@ getData() {
             resolve=$(curl -sL ipget.net/?ip=${DOMAIN})
 	    res=$(echo -n ${resolve} | grep ${IP})
 
-            if [[ -z "${res_judge}" ]]; then
-                colorEcho ${BLUE}  "${DOMAIN} 解析结果：${res_judge}"
-                colorEcho ${RED}  " 域名未解析到当前服务器IP:$IPV4,$IPV6 !"
+            if [[ -z "${res}" ]]; then
+                colorEcho ${BLUE}  "${DOMAIN} 解析结果：${resolve}"
+                colorEcho ${RED}  " 域名未解析到当前服务器IP:(${IP}) !"
                 exit 1
             fi
         fi
