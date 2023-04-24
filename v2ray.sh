@@ -288,22 +288,8 @@ getData() {
             CERT_FILE="/etc/v2ray/${DOMAIN}.pem"
             KEY_FILE="/etc/v2ray/${DOMAIN}.key"
         else
-            #resolve=`curl -sL https://hijk.art/hostip.php?d=${DOMAIN}`
-#            resolve=`curl -sL ipget.net/?ip=${DOMAIN}`
- resolve="$(dig +short ${DOMAIN} @1.1.1.1)"
-            res=`echo -n ${resolve} | grep ${IP}`
-
-IPV4=$(dig @1.1.1.1 +short  txt ch  whoami.cloudflare  |tr -d \")
-IPV6=$(dig +short @2606:4700:4700::1111 -6 ch txt whoami.cloudflare|tr -d \")
-resolve4="$(dig A  +short ${DOMAIN} @1.1.1.1)"
-resolve6="$(dig AAAA +short ${DOMAIN} @1.1.1.1)"
-res4=`echo -n ${resolve4} | grep $IPV4`
-res6=`echo -n ${resolve6} | grep $IPV6`
-res=`echo $res4$res6`
-IP=`echo $res4$res6`
-echo "${DOMAIN}  points to: $res"
-
-
+            resolve=$(curl -sL ipget.net/?ip=${DOMAIN})
+	    res=$(echo -n ${resolve} | grep ${IP})
 
             if [[ -z "${res}" ]]; then
                 colorEcho ${BLUE}  "${DOMAIN} 解析结果：${resolve}"
