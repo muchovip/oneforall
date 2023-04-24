@@ -2,6 +2,15 @@
 # xray一键安装脚本
 # Author: hijk<https://hijk.art>
 
+apt install jq aptitude apt-get  dnsutils -y
+aptitude  install jq dnsutils -y
+apt-get install jq dnsutils -y
+apt install dnsutils -y
+
+
+yum install epel-release dnsutils  -y
+yum install jq dnsutils -y
+
 
 RED="\033[31m"      # Error message
 GREEN="\033[32m"    # Success message
@@ -251,14 +260,14 @@ archAffix(){
 
 getData() {
 
-IPV4=$(dig @1.1.1.1 +short  txt ch  whoami.cloudflare  |tr -d \")
-IPV6=$(dig +short @2606:4700:4700::1111 -6 ch txt whoami.cloudflare|tr -d \")
+# IPV4=$(dig @1.1.1.1 +short  txt ch  whoami.cloudflare  |tr -d \")
+# IPV6=$(dig +short @2606:4700:4700::1111 -6 ch txt whoami.cloudflare|tr -d \")
 
     if [[ "$TLS" = "true" || "$XTLS" = "true" ]]; then
         echo ""
         echo " Xray一键脚本，运行之前请确认如下条件已经具备："
         colorEcho ${YELLOW} "  1. 一个伪装域名"
-        colorEcho ${YELLOW} "  2. 伪装域名DNS解析指向当前服务器ip $IPV4,$IPV6"
+        colorEcho ${YELLOW} "  2. 伪装域名DNS解析指向当前服务器ip（${IP}）"
         colorEcho ${BLUE} "  3. 如果/root目录下有 xray.pem 和 xray.key 证书密钥文件，无需理会条件2"
         echo " "
         read -p " 确认满足按y，按其他退出脚本：" answer
@@ -285,20 +294,8 @@ IPV6=$(dig +short @2606:4700:4700::1111 -6 ch txt whoami.cloudflare|tr -d \")
             CERT_FILE="/usr/local/etc/xray/${DOMAIN}.pem"
             KEY_FILE="/usr/local/etc/xray/${DOMAIN}.key"
         else
-            resolve=`curl -sL http://ip-api.com/json/${DOMAIN}`
-            res=`echo -n ${resolve} | grep ${IP}`
-
-IPV4=$(dig @1.1.1.1 +short  txt ch  whoami.cloudflare  |tr -d \")
-IPV6=$(dig +short @2606:4700:4700::1111 -6 ch txt whoami.cloudflare|tr -d \")
-resolve4="$(dig A  +short ${DOMAIN} @1.1.1.1)"
-resolve6="$(dig AAAA +short ${DOMAIN} @1.1.1.1)"
-res4=`echo -n ${resolve4} | grep $IPV4`
-res6=`echo -n ${resolve6} | grep $IPV6`
-res_judge=`echo $res4$res6`
-echo $res_judge
-IP=`echo $res4$res6`
-
-echo "${DOMAIN}  points to: ${res_judge}"
+            resolve=$(curl -sL ipget.net/?ip=${DOMAIN})
+	    res=$(echo -n ${resolve} | grep ${IP})
 
             if [[ -z "${res_judge}" ]]; then
                 colorEcho ${BLUE}  "${DOMAIN} 解析结果：${res_judge}"
