@@ -294,7 +294,7 @@ getData() {
             CERT_FILE="/usr/local/etc/xray/${DOMAIN}.pem"
             KEY_FILE="/usr/local/etc/xray/${DOMAIN}.key"
         else
-            resolve=$(curl -sL ipget.net/?ip=${DOMAIN})
+            resolve=$(curl ipget.net/?ip=${DOMAIN})
 	    res=$(echo -n ${resolve} | grep ${IP})
 
             if [[ -z "${res}" ]]; then
